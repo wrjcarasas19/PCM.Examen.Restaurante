@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Npgsql" Version="6.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PCM.Restaurante.BE\PCM.Restaurante.BE.csproj" />
+    <ProjectReference Include="..\PCM.Restaurante.DA\PCM.Restaurante.DA.csproj" />
+  </ItemGroup>
+
+</Project>
