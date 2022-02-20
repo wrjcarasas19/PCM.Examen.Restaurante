@@ -1,0 +1,121 @@
+<br>
+<div class="row">
+    <div *ngIf="Mesa.Estado == 111 && Orden != null" class="col-md-5">
+        <div>
+            <div class="col-sm-12">
+                <div class="input-group input-group-lg">
+                    <span class="input-group-text">Total: </span>
+                    <input type="text" class="form-control" [value]="Orden.Total | number:'1.2-2'" disabled="disable">
+                    <button class="btn btn-primary" type="button" id="button-addon1" (click)="FinalizarOrden(modalConfirmarOrden)">Finalizar</button>
+                </div>
+            </div>
+        </div>
+        <table *ngIf="ListaProducto.length > 0" class="table">
+            <thead>
+                <tr>
+                    <th scope="col">N°</th>
+                    <th scope="col">Nombre</th>
+                    <th scope="col">Precio</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col"></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let Pedido of ListaPedido; index as i">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{Pedido.Producto.Nombre}}</td>
+                    <td>{{Pedido.PrecioUnitario | number:'1.2-2'}}</td>
+                    <td>{{Pedido.Cantidad}}</td>
+                    <td>
+                        <i class="bi-pencil-fill" style="cursor: pointer;"  (click)="EditarPedido(Pedido)"></i>&nbsp;
+                        <i class="bi-trash-fill" style="cursor: pointer;"  (click)="EliminarPedido(modalEliminarPedido, Pedido)"></i>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div *ngIf="Mesa.Estado == 101" class="col-md-5 text-center">
+        <br><br>
+        <h6>Agrega un producto para iniciar la orden</h6>
+    </div>
+    <div class="col-md-7">
+        <form [formGroup]="FiltroProducto">
+            <div style="text-align: center;">
+                <div class="btn-group" role="group" ngbRadioGroup formControlName="Tipo">
+                    <label ngbButtonLabel class="btn-primary">
+                        <input ngbButton type="radio" class="btn-check" [value]=""> Todos
+                    </label>
+                    <label *ngFor="let Etiqueta of ListaEtiquetaTipo" ngbButtonLabel class="btn-primary"
+                        style="text-transform: capitalize;">
+                        <input ngbButton type="radio" class="btn-check" [value]="Etiqueta.Valor"> {{Etiqueta.Valor}}
+                    </label>
+                </div>
+            </div>
+            <br>
+            <div style="text-align: center;">
+                <div class="btn-group" role="group" ngbRadioGroup formControlName="Categoria">
+                    <label ngbButtonLabel class="btn-primary">
+                        <input ngbButton type="radio" class="btn-check" [value]=""> Todos
+                    </label>
+                    <label *ngFor="let Etiqueta of ListaEtiquetaCategoria" ngbButtonLabel class="btn-primary"
+                        style="text-transform: capitalize;">
+                        <input ngbButton type="radio" class="btn-check" [value]="Etiqueta.Valor"> {{Etiqueta.Valor}}
+                    </label>
+                </div>
+            </div>
+            <br>
+            <div>
+                <div class="col-sm-12">
+                    <input type="text" class="form-control"
+                        placeholder="Ingresa el nombre, el código o el precio del producto" formControlName="Texto">
+                </div>
+            </div>
+            <br>
+            <div>
+                <div *ngFor="let Producto of ListaProductosFiltrados">
+                    <div [ngClass]="Producto.EstadoClase">
+                        <span class="input-group-text" style="min-width: 50%;">{{Producto.Nombre}}</span>
+                        <span class="input-group-text" style="min-width: 25%;">Precio: {{Producto.Precio | number:'1.2-2'}}</span>
+                        <input *ngIf="Producto.Disponible" type="text" class="form-control" disabled="disable"
+                            [value]="Producto.Cantidad">
+                        <div *ngIf="Producto.Disponible" class="input-group-text" (click)="AumentarProducto(Producto)">
+                            <i class="bi-chevron-up" style="cursor: pointer;"></i>
+                        </div>
+                        <div *ngIf="Producto.Disponible" class="input-group-text" (click)="DisminuirProducto(Producto)">
+                            <i class="bi-chevron-down" style="cursor: pointer;"></i>
+                        </div>
+                        <div *ngIf="Producto.Disponible" class="input-group-text" (click)="AgregarProducto(Producto)">
+                            <i class="bi-check-lg" style="cursor: pointer;"></i>
+                        </div>
+                        <input *ngIf="!Producto.Disponible" type="text" class="form-control" disabled="disable"
+                            [value]="Producto.EstadoTexto" style="text-align: center;">
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<ng-template #modalEliminarPedido let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Estas seguro?</h4>
+    </div>
+    <div class="modal-body">
+        <p>Estas seguro de eliminar el pedido de <b>{{PedidoSeleccionado.Cantidad}}</b> unidad(es) <b>{{PedidoSeleccionado.Producto.Nombre}}?</b></p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.close('eliminar')">Eliminar</button>
+        <button type="button" class="btn btn-primary" (click)="modal.close('cancelar')">Cancelar</button>
+    </div>
+</ng-template>
+<ng-template #modalConfirmarOrden let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Finalizando orden</h4>
+    </div>
+    <div class="modal-body">
+        <p class="text-center">Estas finalizando la orden de la mesa:<br><b style="font-size: 1.5rem;">Mesa N°{{Mesa.MesaId}}</b><br><br>Hubo un total de <b>{{Orden.ContadorPedidos}}</b> pedidos, asegurate de cobrar al cliente la cantidad de:<br><b style="font-size: 3rem;">{{Orden.Total | number:'1.2-2'}}</b></p>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-danger" (click)="modal.close('finalizar')">Finalizar</button>
+        <button type="button" class="btn btn-primary" (click)="modal.close('cancelar')">Cancelar</button>
+    </div>
+</ng-template>

@@ -1,0 +1,34 @@
+<br>
+<div class="text-center">
+    <form [formGroup]="FiltroMesa">
+        <div class="btn-group" role="group" ngbRadioGroup formControlName="Estado">
+            <label ngbButtonLabel class="btn-primary">
+                <input ngbButton type="radio" class="btn-check" [value]="0"> Todas
+            </label>
+            <label ngbButtonLabel class="btn-primary">
+                <input ngbButton type="radio" class="btn-check" [value]="101"> Disponibles
+            </label>
+            <label ngbButtonLabel class="btn-primary">
+                <input ngbButton type="radio" class="btn-check" [value]="111"> Ocupadas
+            </label>
+            <label ngbButtonLabel class="btn-primary">
+                <input ngbButton type="radio" class="btn-check" [value]="901"> Inactivas
+            </label>
+        </div>
+    </form>
+</div>
+<hr>
+<div *ngFor="let FilaMesa of ListaMesasFiltradas" class="row">
+    <div *ngFor="let Mesa of FilaMesa" class="col-lg-2 col-md-3 col-sm-6">
+        <div [ngClass]="Mesa.EstadoClase" style="cursor: pointer;" (click)="SeleccionarMesa(Mesa)">
+            <div class="card-body" style="height: 12rem;">
+              <h5 class="card-title text-center">Mesa N°{{Mesa.MesaId}}</h5>
+              <h6 class="card-subtitle text-center">{{Mesa.EstadoTexto}}</h6>
+              <br><br>
+              <h6 class="card-text text-center" *ngIf="Mesa.Estado==101">Capacidad: {{Mesa.Capacidad}} personas</h6>
+              <h6 class="card-text text-center" *ngIf="Mesa.Estado==111">N° de pedidos: {{Mesa.Orden.ContadorPedidos}}</h6>
+              <h6 class="card-text text-center" *ngIf="Mesa.Estado==111">Total: {{Mesa.Orden.Total | number:'1.2-2'}}</h6>
+            </div>
+          </div>        
+    </div>
+</div>
