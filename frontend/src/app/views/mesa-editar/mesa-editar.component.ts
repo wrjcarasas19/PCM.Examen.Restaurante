@@ -252,4 +252,7 @@ export class MesaEditarComponent implements OnInit {
       
     });
   }
+  LimpiarFiltroTexto() {
+    this.FiltroProducto.get('Texto')?.reset();
+  }
 }

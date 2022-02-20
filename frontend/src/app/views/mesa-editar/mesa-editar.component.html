@@ -1,5 +1,5 @@
 <br>
-<div class="row">
+<div class="row" *ngIf="ListaProducto.length > 0">
     <div *ngIf="Mesa.Estado == 111 && Orden != null" class="col-md-5">
         <div>
             <div class="col-sm-12">
@@ -66,8 +66,11 @@
             <br>
             <div>
                 <div class="col-sm-12">
-                    <input type="text" class="form-control"
-                        placeholder="Ingresa el nombre, el código o el precio del producto" formControlName="Texto">
+                    <div class="input-group">
+                        <input type="text" class="form-control"
+                            placeholder="Ingresa el nombre, el código o el precio del producto" formControlName="Texto">
+                        <button class="btn btn-secondary" type="button" (click)="LimpiarFiltroTexto()">Limpiar</button>
+                    </div>
                 </div>
             </div>
             <br>
@@ -115,7 +118,7 @@
         <p class="text-center">Estas finalizando la orden de la mesa:<br><b style="font-size: 1.5rem;">Mesa N°{{Mesa.MesaId}}</b><br><br>Hubo un total de <b>{{Orden.ContadorPedidos}}</b> pedidos, asegurate de cobrar al cliente la cantidad de:<br><b style="font-size: 3rem;">{{Orden.Total | number:'1.2-2'}}</b></p>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-danger" (click)="modal.close('finalizar')">Finalizar</button>
+        <button type="button" class="btn btn-success" (click)="modal.close('finalizar')">Finalizar</button>
         <button type="button" class="btn btn-primary" (click)="modal.close('cancelar')">Cancelar</button>
     </div>
 </ng-template>
